@@ -3,8 +3,6 @@ use warnings;
 
 use Test::More;
 
-use DBIx::Class::Schema::Auth;
-
 {
    package A::Schema;
 

@@ -33,7 +33,7 @@ sub _build_class {
    my $moniker = join '', map ucfirst, @name;
    my $method = 'generate_' . ( join '_', map lc, @name ) . '_class';
 
-   return sub { $_[0]->$method; $_[0]->schema->class($moniker) }
+   return sub { $_[0]->$method; $_[0]->schema->source($moniker) }
 }
 
 sub _generate_class {
@@ -122,8 +122,10 @@ sub _generate_class {
 sub setup_role_to_permissions {
    my $self = shift;
 
-   $self->permission_class->has_many(
-      role_permissions => $self->role_permission_class, 'permission_id',
+   $self->permission_class->add_relationship(
+      role_permissions => $self->role_permission_class,
+      { 'foreign.permission_id' => 'self.id' },
+      { accessor => 'multi', join_type => 'left' },
    );
    $self->permission_class->many_to_many( roles => 'role_permissions', 'role' );
    $self->role_permission_class->belongs_to( role => $self->role_class, 'role_id');
