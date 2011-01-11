@@ -27,6 +27,14 @@ has "_${_}_xformer" => (
    default => quote_sub q< sub {} >,
 ) for qw(permission role user section screen);
 
+has '_user_warn' => (
+   is      => 'ro',
+   init_arg => 'user_warn',
+   default => quote_sub q< sub { warn $_[1] } >,
+);
+
+sub user_warn { $_[0]->_user_warn->($_[0], $_[1]) }
+
 has '_user_info' => (
    is      => 'ro',
    init_arg => 'user_info',
@@ -66,7 +74,7 @@ sub add_role {
    if (@perms) {
       $role->add_to_permissions($_) for @perms;
    } else {
-      warn "No permissions found for role $name";
+      $self->user_warn("No permissions found for role $name");
    }
 
    return $role;
@@ -90,7 +98,7 @@ sub add_user {
    if (@roles) {
       $user->add_to_roles($_) for @roles;
    } else {
-      warn "No roles found for user $name";
+      $self->user_warn("No roles found for user $name");
    }
 
    return $user
@@ -129,7 +137,7 @@ sub add_screen {
    if (@perms) {
       $screen->add_to_permissions($_) for @perms;
    } else {
-      warn "No permissions found for screen $name";
+      $self->user_warn("No permissions found for screen $name");
    }
 
    $screen
