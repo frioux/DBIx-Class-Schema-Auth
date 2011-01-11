@@ -3,6 +3,7 @@ package DBIx::Class::Schema::Auth;
 use Moo;
 
 use Scalar::Util 'blessed';
+use Sub::Name 'subname';
 
 has schema => (
    is => 'ro',
@@ -49,23 +50,73 @@ sub _generate_class {
 
 {
    no strict 'refs';
-   *generate_permission_class        = __PACKAGE__->_generate_class('Permission');
-   *generate_permission_screen_class = __PACKAGE__->_generate_class('PermissionScreen');
-   *generate_role_class              = __PACKAGE__->_generate_class('Role');
-   *generate_role_permission_class   = __PACKAGE__->_generate_class('RolePermission');
-   *generate_screen_class            = __PACKAGE__->_generate_class('Screen');
-   *generate_section_class           = __PACKAGE__->_generate_class('Section');
-   *generate_user_class              = __PACKAGE__->_generate_class('User');
-   *generate_user_role_class         = __PACKAGE__->_generate_class('UserRole');
+    my $h = 'DBIx::Class::Schema::Auth';
 
-   *_build_permission_class        = __PACKAGE__->_build_class('permission');
-   *_build_permission_screen_class = __PACKAGE__->_build_class(qw(permission screen));
-   *_build_role_class              = __PACKAGE__->_build_class('role');
-   *_build_role_permission_class   = __PACKAGE__->_build_class(qw(role permission));
-   *_build_screen_class            = __PACKAGE__->_build_class('screen');
-   *_build_section_class           = __PACKAGE__->_build_class('section');
-   *_build_user_class              = __PACKAGE__->_build_class('user');
-   *_build_user_role_class         = __PACKAGE__->_build_class(qw(user role));
+    *generate_permission_class =
+       subname "${h}::generate_permission_class" =>
+       __PACKAGE__->_generate_class('Permission');
+
+    *generate_permission_screen_class =
+       subname "${h}::generate_permission_screen_class" =>
+       __PACKAGE__->_generate_class('PermissionScreen');
+
+    *generate_role_class =
+       subname "${h}::generate_role_class" =>
+       __PACKAGE__->_generate_class('Role');
+
+    *generate_role_permission_class =
+       subname "${h}::generate_role_permission_class" =>
+       __PACKAGE__->_generate_class('RolePermission');
+
+    *generate_screen_class =
+       subname "${h}::generate_screen_class" =>
+       __PACKAGE__->_generate_class('Screen');
+
+    *generate_section_class =
+       subname "${h}::generate_section_class" =>
+       __PACKAGE__->_generate_class('Section');
+
+    *generate_user_class =
+       subname "${h}::generate_user_class" =>
+       __PACKAGE__->_generate_class('User');
+
+    *generate_user_role_class =
+       subname "${h}::generate_user_role_class" =>
+       __PACKAGE__->_generate_class('UserRole');
+
+
+    *_build_permission_class =
+       subname "${h}::_build_permission_class" =>
+       __PACKAGE__->_build_class('permission');
+
+    *_build_permission_screen_class =
+       subname "${h}::_build_permission_screen_class" =>
+       __PACKAGE__->_build_class(qw(permission screen));
+
+    *_build_role_class =
+       subname "${h}::_build_role_class" =>
+       __PACKAGE__->_build_class('role');
+
+    *_build_role_permission_class =
+       subname "${h}::_build_role_permission_class" =>
+       __PACKAGE__->_build_class(qw(role permission));
+
+    *_build_screen_class =
+       subname "${h}::_build_screen_class" =>
+       __PACKAGE__->_build_class('screen');
+
+    *_build_section_class =
+       subname "${h}::_build_section_class" =>
+       __PACKAGE__->_build_class('section');
+
+    *_build_user_class =
+       subname "${h}::_build_user_class" =>
+       __PACKAGE__->_build_class('user');
+
+    *_build_user_role_class =
+       subname "${h}::_build_user_role_class" =>
+       __PACKAGE__->_build_class(qw(user role));
+
 }
 
 sub setup_role_to_permissions {
