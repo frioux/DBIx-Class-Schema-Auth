@@ -135,5 +135,49 @@ sub add_screen {
    $screen
 }
 
+sub populate {
+   my ($self, $auth) = @_;
+
+   $self->user_info('populating permissions');
+
+   $self->add_permission($_) for @{$auth->{permissions}};
+
+   $self->user_info('populating roles');
+   $self->add_role(keys %$_,
+      (ref ( values %$_ ) ? @{ values %$_ } : values %$_ )
+   ) for @{$auth->{roles}};
+
+   $self->user_info('populating users');
+   for my $name (keys %{$auth->{users}}) {
+      my $result = $auth->{users}{$name};
+
+      my $type = ref $result;
+
+      my ($user_args, @role_expr) = ({});
+
+      if (defined $type && $type eq 'HASH') {
+         my $r = delete $result->{roles};
+         @role_expr = (ref $r ? @$r : $r);
+         $user_args = $result;
+      } elsif (defined $type && $type eq 'ARRAY') {
+         @role_expr = @$result;
+      } elsif (!$type) {
+         @role_expr = ($result);
+      }
+
+      $self->add_user($name, $user_args, @role_expr);
+   }
+
+   $self->user_info('populating sections');
+   $self->add_section($_) for @{$auth->{sections}};
+
+   $self->user_info('populating screens');
+   $self->add_screen(
+      $_, $auth->{screens}{$_}{section}, {
+         xtype => $auth->{screens}{$_}{xtype}
+      }, (ref $auth->{screens}{$_}{permissions} ? @{ $auth->{screens}{$_}{permissions} } : $auth->{screens}{$_}{permissions} )
+   ) for keys %{$auth->{screens}};
+}
+
 1;
 
