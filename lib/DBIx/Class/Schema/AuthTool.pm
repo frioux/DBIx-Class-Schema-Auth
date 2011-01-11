@@ -1,6 +1,7 @@
 package DBIx::Class::Schema::AuthTool;
 
 use Moo;
+use Sub::Quote;
 
 has schema => (
    is => 'ro',
@@ -20,11 +21,25 @@ sub _build_screens { $_[0]->schema->resultset('Screen') }
 sub _build_sections { $_[0]->schema->resultset('Section') }
 sub _build_users { $_[0]->schema->resultset('User') }
 
-sub transform_permission_hashref {}
-sub transform_role_hashref {}
-sub transform_user_hashref {}
-sub transform_section_hashref {}
-sub transform_screen_hashref {}
+has "_${_}_xformer" => (
+   is      => 'ro',
+   init_arg => "${_}_transformer",
+   default => quote_sub q< sub {} >,
+) for qw(permission role user section screen);
+
+has '_user_info' => (
+   is      => 'ro',
+   init_arg => 'user_info',
+   default => quote_sub q< sub { warn $_[1] } >,
+);
+
+sub user_info { $_[0]->_user_info->($_[0], $_[1]) }
+
+sub transform_permission_hashref { $_[0]->_permission_xformer->($_[0], $_[1]) }
+sub transform_role_hashref { $_[0]->_role_xformer->($_[0], $_[1]) }
+sub transform_user_hashref { $_[0]->_user_xformer->($_[0], $_[1]) }
+sub transform_section_hashref { $_[0]->_section_xformer->($_[0], $_[1]) }
+sub transform_screen_hashref { $_[0]->_screen_xformer->($_[0], $_[1]) }
 
 sub add_permission {
    my ($self, $name) = @_;
