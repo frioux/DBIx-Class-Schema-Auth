@@ -10,11 +10,11 @@ use DBIx::Class::Schema::Auth;
 
    use parent 'DBIx::Class::Schema';
 
+   __PACKAGE__->load_components('Schema::AuthComponent');
+
    1;
 }
 
-A::Schema->load_components('Schema::AuthComponent');
-my $auth = DBIx::Class::Schema::Auth->new( schema => 'A::Schema' );
 A::Schema->auth->setup_default_rels;
 warn A::Schema->auth->user_class;
 use Devel::Dwarn;
