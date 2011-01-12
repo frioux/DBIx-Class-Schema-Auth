@@ -151,9 +151,9 @@ sub populate {
    $self->add_permission($_) for @{$auth->{permissions}};
 
    $self->user_info('populating roles');
-   $self->add_role(keys %$_,
-      (ref ( values %$_ ) ? @{ values %$_ } : values %$_ )
-   ) for @{$auth->{roles}};
+   $self->add_role($_,
+      (ref ( $auth->{roles}{$_} ) ? @{ $auth->{roles}{$_} } : $auth->{roles}{$_} )
+   ) for keys %{$auth->{roles}};
 
    $self->user_info('populating users');
    for my $name (keys %{$auth->{users}}) {
