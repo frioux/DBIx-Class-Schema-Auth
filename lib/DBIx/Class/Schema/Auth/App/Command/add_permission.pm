@@ -18,7 +18,10 @@ sub validate_args {
 sub execute {
    my ($self, $opt, $args) = @_;
 
-   $self->app->auth->add_permission($args->[0])
+   $self->app->auth->add_permission($args->[0]);
+   $self->app->get_config;
+   push @{$self->app->config->{permissions}}, $args->[0];
+   $self->app->store_config;
 }
 
 1;
