@@ -30,6 +30,11 @@ sub execute {
    my ($name, @perm_exprs) = @$args;
 
    $self->app->auth->add_user($name, $opt, @perm_exprs);
+   $self->app->config->{users}{$name} = {
+      %$opt,
+      roles => \@perm_exprs,
+   };
+   $self->app->store_config;
 }
 
 1;
