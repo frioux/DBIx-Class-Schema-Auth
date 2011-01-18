@@ -18,4 +18,6 @@ column name => {
 
 primary_key 'id';
 
+unique_constraint 'name';
+
 1;
