@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use rlib;
+use Lynx::SMS::Schema;
+use DBIx::Class::Schema::Auth::App;
+use Config::ZOMG;
+use DBIx::Class::Schema::AuthTool;
+
+my $app = DBIx::Class::Schema::Auth::App->new({
+   auth => DBIx::Class::Schema::AuthTool->new(
+      schema => Lynx::SMS::Schema->connect(
+         Config::ZOMG->open(name => 'Lynx::SMS')->{Model}{DB}{connect_info}
+      ),
+      user_info => sub { print " --- $_[1]\n" },
+      user_warn => sub { print " !!! $_[1]\n" },
+      user_transformer => sub {
+         $_[1]->{$_} ||= '--' for (qw(first_name last_name email));
+         $_[1]->{password} ||= 'test';
+         $_[1]->{is_active} //= 1;
+      },
+   ),
+   config_location => 'script/auth.json',
+});
+
+$app->run;

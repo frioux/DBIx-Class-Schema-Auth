@@ -21,7 +21,7 @@ sub execute {
    my ($self, $opt, $args) = @_;
    my ($name, @perms) = @$args;
 
-   $self->app->auth->add_role($name => @perms)
+   $self->app->auth->add_role($name => @perms);
    $self->app->config->{roles}{$name} = \@perms;
    $self->app->store_config;
 }
