@@ -24,7 +24,6 @@ sub execute {
 
    $self->app->auth->add_screen($name, $section, { xtype => $xtype }, @perms);
 
-   $self->app->get_config;
    $self->app->config->{screens}{$name} = {
       permissions => \@perms,
       section     => $section,

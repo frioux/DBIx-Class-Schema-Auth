@@ -20,7 +20,6 @@ sub execute {
 
    $self->app->auth->add_section($args->[0]);
 
-   $self->app->get_config;
    push @{$self->app->config->{sections}}, $args->[0];
    $self->app->store_config;
 }
