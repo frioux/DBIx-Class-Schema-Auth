@@ -1,9 +1,10 @@
 package DBIx::Class::Schema::Auth::App;
 
-use App::Cmd::Setup -app;
+use Moo;
+use autodie;
+use JSON;
 
-use strict;
-use warnings;
+extends 'App::Cmd';
 
 use JSON;
 
