@@ -12,9 +12,9 @@ sub usage_desc {
 }
   sub opt_spec {
     return (
-      [ 'first-name|l',  'first name' ],
-      [ 'last-name|f',  'last name' ],
-      [ 'email|e',  'email' ],
+      [ 'first-name|l=s',  'first name' ],
+      [ 'last-name|f=s',  'last name' ],
+      [ 'email|e=s',  'email' ],
     );
   }
 sub validate_args {
