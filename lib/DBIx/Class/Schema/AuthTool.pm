@@ -71,7 +71,7 @@ sub add_role {
    my @perms = $self->permissions
       ->search({ 'me.name' => { -like => \@perm_expr } })->all;
 
-   $self->schema->resultset('RolePermission')->delete({ role_id => $role->id });
+   $self->schema->resultset('RolePermission')->search({ role_id => $role->id })->delete;
    if (@perms) {
       $role->add_to_permissions($_) for @perms;
    } else {
@@ -96,7 +96,7 @@ sub add_user {
    my @roles = $self->roles
       ->search({ 'me.name' => { -like => \@role_expr } })->all;
 
-   $self->schema->resultset('UserRole')->delete({ user_id => $user->id });
+   $self->schema->resultset('UserRole')->search({ user_id => $user->id })->delete;
    if (@roles) {
       $user->add_to_roles($_) for @roles;
    } else {
@@ -136,7 +136,7 @@ sub add_screen {
    my @perms = $self->permissions
       ->search({ name => { -like => \@perm_expr } })->all;
 
-   $self->schema->resultset('PermissionScreen')->delete({ screen_id => $screen->id });
+   $self->schema->resultset('PermissionScreen')->search({ screen_id => $screen->id })->delete;
    if (@perms) {
       $screen->add_to_permissions($_) for @perms;
    } else {
