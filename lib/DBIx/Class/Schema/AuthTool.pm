@@ -56,7 +56,7 @@ sub add_permission {
 
    $self->transform_permission_hashref($hashref);
 
-   $self->permissions->create($hashref)
+   $self->permissions->find_or_create($hashref)
 }
 
 sub add_role {
@@ -66,7 +66,7 @@ sub add_role {
 
    $self->transform_role_hashref($hashref);
 
-   my $role = $self->roles->create($hashref);
+   my $role = $self->roles->find_or_create($hashref);
 
    my @perms = $self->permissions
       ->search({ 'me.name' => { -like => \@perm_expr } })->all;
@@ -90,7 +90,7 @@ sub add_user {
 
    $self->transform_user_hashref($hashref);
 
-   my $user = $self->users->create($hashref);
+   my $user = $self->users->find_or_create($hashref);
 
    my @roles = $self->roles
       ->search({ 'me.name' => { -like => \@role_expr } })->all;
@@ -111,7 +111,7 @@ sub add_section {
 
    $self->transform_screen_hashref($hashref);
 
-   $self->sections->create($hashref)
+   $self->sections->find_or_create($hashref)
 }
 
 sub add_screen {
@@ -129,7 +129,7 @@ sub add_screen {
 
    $self->transform_screen_hashref($hashref);
 
-   my $screen = $self->screens->create($hashref);
+   my $screen = $self->screens->find_or_create($hashref);
 
    my @perms = $self->permissions
       ->search({ name => { -like => \@perm_expr } })->all;
